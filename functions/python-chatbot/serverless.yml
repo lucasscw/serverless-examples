@@ -3,6 +3,11 @@ service: chatbot-python-function
 provider:
   name: scaleway
   runtime: python310
+  scwToken: ${env:SCW_SECRET_ACCESS_KEY}  
+  scwProject: ${env:SCW_PROJECT_ID}
+  secret:
+    SECRET_KEY: ${env:SECRET_KEY}
+
 
 plugins:
   - serverless-scaleway-functions
