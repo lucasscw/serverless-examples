@@ -1,0 +1,29 @@
+name: Deploy master branch
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+      working-directory: functions/python-chatbot/
+    - name: serverless deploy
+      run: ./bin/deploy.sh
+      working-directory: functions/python-chatbot/
+      env:
+        SCW_SECRET_ACCESS_KEY: ${{ secrets.SCW_SECRET_ACCESS_KEY }}
+        SCW_PROJECT_ID: ${{ secrets.SCW_PROJECT_ID }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
